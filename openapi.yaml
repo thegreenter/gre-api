@@ -1,0 +1,231 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://api-seguridad.sunat.gob.pe/v1'
+  - url: 'https://api.sunat.gob.pe/v1'
+info:
+  description: "PLATAFORMA NUEVA GRE."
+  version: "1.0.0"
+  title: "SUNAT GRE API"
+  contact:
+    email: "me@giansalex.dev"
+tags:
+- name: "auth"
+  description: "Credenciales"
+- name: "cpe"
+  description: "Servicio de recepcion de comprobantes"
+paths:
+  '/clientessol/{client_id}/oauth2/token/':
+    post:
+      tags:
+      - "auth"
+      summary: "Generar un nuevo token"
+      description: ""
+      operationId: "getToken"
+      requestBody:
+        content:
+          "application/x-www-form-urlencoded":
+            schema:
+              type: object
+              required: 
+                - grant_type
+                - scope
+                - client_id
+                - client_secret
+                - username
+                - password
+              properties:
+                grant_type:
+                  type: "string"
+                  default: "password"
+                scope:
+                  type: "string"
+                  default: "https://api-cpe.sunat.gob.pe"
+                client_id:
+                  type: "string"
+                  description: "client_id generado en menú sol"
+                client_secret:
+                  type: "string"
+                  description: "client_secret generado en menú sol"
+                username:
+                  type: "string"
+                  description: "<Numero de RUC> + <Usuario SOL>"
+                password:
+                  type: "string"
+                  description: "Contrasena SOL"
+      parameters:
+      - name: "client_id"
+        in: "path"
+        description: "El client_id generado en menú sol"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "operacion exitosa"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ApiToken"
+  '/contribuyente/gem/comprobantes/{filename}':
+    post:
+      tags:
+      - "cpe"
+      summary: "Permite realizar el envio del comprobante"
+      description: ""
+      operationId: "enviarCpe"
+      parameters:
+      - name: "filename"
+        in: "path"
+        description: "Nombre del archivo sin extension"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/CpeDocument"
+      responses:
+        "200":
+          description: "operacion exitosa"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CpeResponse"
+        "500":
+          description: "Error inesperado"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CpeError"
+        "422":
+          description: "Error inesperado"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CpeErrorValidation"
+      security:
+      - sunat_auth: []
+  '/contribuyente/gem/comprobantes/envios/{numTicket}':
+    post:
+      tags:
+      - "cpe"
+      summary: "Permite realizar la consulta del envío realizado"
+      description: ""
+      operationId: "consultarEnvio"
+      parameters:
+      - name: "numTicket"
+        in: "path"
+        description: "Número de ticket (UUID) generado por el envío realizado"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "operacion exitosa"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/StatusResponse"
+        "500":
+          description: "Error inesperado"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CpeError"
+        "422":
+          description: "Error inesperado"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CpeErrorValidation"
+externalDocs:
+  description: "MANUAL DE SERVICIO WEB - PLATAFORMA NUEVA GRE"
+  url: "https://cpe.sunat.gob.pe/sites/default/files/inline-files/Manual_Servicios_GRE.pdf"
+components:
+  schemas:
+    CpeDocument:
+      type: "object"
+      properties:
+        archivo:
+          type: "object"
+          properties: 
+            nomArchivo:
+              type: "string"
+              description: "Nombre del archivo zip enviado. Estructura: RRRRRRRRRRR-TT-SSSS-NNNNNNNN.zip"
+            arcGreZip:
+              type: "string"
+              description: "Archivo zip enviado (en base64)"
+            hashZip:
+              type: "string"
+              description: "Hash del archivo zip enviado, usando SHA-256"
+    CpeResponse:
+      type: "object"
+      properties:
+        numTicket:
+          type: "string"
+          description: "Numero de ticket (UUID) generado por el envío realizado."
+        fecRecepcion:
+          type: "string"
+          description: "Fecha de recepción de envío del comprobante."
+          format: "date-time"
+    StatusResponse:
+      type: "object"
+      properties:
+        codRespuesta:
+          type: "string"
+          description: "Codigo de respuesta (98: en proceso, 99: envío con error, 0: envío OK)."
+        error:
+          type: "object"
+          description: "Solo se generará este nodo si codRespuesta es 99"
+          properties:
+            numError:
+              type: string
+              description: "Número de error encontrado para el envío realizado"
+            desError:
+              type: string
+              description: "Detalle del error encontrado para el envío realizado"
+        arcCdr:
+          type: "string"
+          description: "CDR generado (base64)"
+        indCdrGenerado:
+          type: "string"
+          description: "Indicador de generación de CDR (1: Si genera CDR, 0: No genera CDR)."
+    CpeError:
+      type: "object"
+      properties:
+        cod:
+          type: "string"
+          description: "Codigo de error encontrado"
+        msg:
+          type: "string"
+          description: "Descripción de error encontrado"
+    CpeErrorValidation:
+      type: "object"
+      properties:
+        cod:
+          type: "string"
+          description: "Codigo de error"
+        msg:
+          type: "string"
+          description: "Mensaje de error para el usuario"
+        errors:
+          type: "array"
+          description: "Array de errores y descripcion del error"
+          items:
+            $ref: "#/components/schemas/CpeError"
+    ApiToken:
+      type: "object"
+      properties:
+        access_token:
+          type: "string"
+        token_type:
+          type: "string"
+        expires_in:
+          type: "integer"
+          format: "int32"
+          description: "El tiempo de expiración en segundos. Concluído el tiempo podrá generar un nuevo token"
+  securitySchemes:
+    sunat_auth:
+      type: http
+      scheme: bearer
