@@ -21,7 +21,6 @@ Primero es necesario obtener el client_id, client_secret desde el portal de SUNA
 
 ```php
 <?php
-
 $apiInstance = new Greenter\Sunat\GRE\Api\AuthApi(
     new GuzzleHttp\Client()
 );
@@ -41,7 +40,28 @@ try {
 
 ```
 
-## Models
+Enviar comprobante
+```php
+$config = Greenter\Sunat\GRE\Configuration::getDefaultConfiguration()
+    ->setAccessToken($token);
+
+$cpeApi = new Greenter\Sunat\GRE\Api\CpeApi(
+    new GuzzleHttp\Client(),
+    $config->setHost('https://api.sunat.gob.pe/v1')
+);
+
+$greZip = file_get_contents('20161515648-09-T001-124.zip');
+$doc = (new Greenter\Sunat\GRE\Model\CpeDocument())
+    ->setArchivo((new Greenter\Sunat\GRE\Model\CpeDocumentArchivo())
+        ->setNomArchivo('20161515648-09-T001-124.zip')
+        ->setArcGreZip(base64_encode($greZip))
+        ->setHashZip(hash('sha256', $greZip))
+    );
+$result = $cpeApi->enviarCpe('20161515648-09-T001-124', $doc);
+$ticket = $result->getNumTicket();
+```
+
+## Doc Models
 
 - [ApiToken](docs/Model/ApiToken.md)
 - [CpeDocument](docs/Model/CpeDocument.md)
@@ -51,22 +71,3 @@ try {
 - [CpeResponse](docs/Model/CpeResponse.md)
 - [StatusResponse](docs/Model/StatusResponse.md)
 - [StatusResponseError](docs/Model/StatusResponseError.md)
-
-## Authorization
-
-### sunat_auth
-
-- **Type**: Bearer authentication
-
-## Tests
-
-To run the tests, use:
-
-```bash
-composer install
-vendor/bin/phpunit
-```
-
-## Author
-
-me@giansalex.dev
