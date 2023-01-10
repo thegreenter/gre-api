@@ -211,36 +211,6 @@ class CpeApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
-                case 500:
-                    if ('\Greenter\Sunat\GRE\Model\CpeError' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\Greenter\Sunat\GRE\Model\CpeError' !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\Greenter\Sunat\GRE\Model\CpeError', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                case 422:
-                    if ('\Greenter\Sunat\GRE\Model\CpeErrorValidation' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\Greenter\Sunat\GRE\Model\CpeErrorValidation' !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\Greenter\Sunat\GRE\Model\CpeErrorValidation', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
             }
 
             $returnType = '\Greenter\Sunat\GRE\Model\StatusResponse';
@@ -261,14 +231,6 @@ class CpeApi
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Greenter\Sunat\GRE\Model\StatusResponse',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
                 case 500:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -466,7 +428,7 @@ class CpeApi
      *
      * @throws \Greenter\Sunat\GRE\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Greenter\Sunat\GRE\Model\CpeResponse|\Greenter\Sunat\GRE\Model\CpeError|\Greenter\Sunat\GRE\Model\CpeErrorValidation
+     * @return \Greenter\Sunat\GRE\Model\CpeResponse
      */
     public function enviarCpe($filename, $cpe_document = null, string $contentType = self::contentTypes['enviarCpe'][0])
     {
@@ -485,7 +447,7 @@ class CpeApi
      *
      * @throws \Greenter\Sunat\GRE\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Greenter\Sunat\GRE\Model\CpeResponse|\Greenter\Sunat\GRE\Model\CpeError|\Greenter\Sunat\GRE\Model\CpeErrorValidation, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Greenter\Sunat\GRE\Model\CpeResponse HTTP status code, HTTP response headers (array of strings)
      */
     public function enviarCpeWithHttpInfo($filename, $cpe_document = null, string $contentType = self::contentTypes['enviarCpe'][0])
     {
@@ -542,36 +504,6 @@ class CpeApi
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
-                case 500:
-                    if ('\Greenter\Sunat\GRE\Model\CpeError' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\Greenter\Sunat\GRE\Model\CpeError' !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\Greenter\Sunat\GRE\Model\CpeError', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                case 422:
-                    if ('\Greenter\Sunat\GRE\Model\CpeErrorValidation' === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ('\Greenter\Sunat\GRE\Model\CpeErrorValidation' !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, '\Greenter\Sunat\GRE\Model\CpeErrorValidation', []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
             }
 
             $returnType = '\Greenter\Sunat\GRE\Model\CpeResponse';
@@ -592,14 +524,6 @@ class CpeApi
 
         } catch (ApiException $e) {
             switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Greenter\Sunat\GRE\Model\CpeResponse',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
                 case 500:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
