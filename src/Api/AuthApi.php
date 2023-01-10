@@ -28,6 +28,7 @@
 
 namespace Greenter\Sunat\GRE\Api;
 
+use Greenter\Sunat\GRE\Model\ApiToken;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -48,7 +49,7 @@ use Greenter\Sunat\GRE\ObjectSerializer;
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class AuthApi
+class AuthApi implements AuthApiInterface
 {
     /**
      * @var ClientInterface
@@ -138,11 +139,11 @@ class AuthApi
      *
      * @throws \Greenter\Sunat\GRE\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Greenter\Sunat\GRE\Model\ApiToken
+     * @return ApiToken
      */
-    public function getToken($grant_type, $scope, $client_id, $client_secret, $username, $password, string $contentType = self::contentTypes['getToken'][0])
+    public function getToken(?string $grant_type, ?string $scope, ?string $client_id, ?string $client_secret, ?string $username, ?string $password): ApiToken
     {
-        list($response) = $this->getTokenWithHttpInfo($grant_type, $scope, $client_id, $client_secret, $username, $password, $contentType);
+        list($response) = $this->getTokenWithHttpInfo($grant_type, $scope, $client_id, $client_secret, $username, $password, self::contentTypes['getToken'][0]);
         return $response;
     }
 

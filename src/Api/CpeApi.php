@@ -28,6 +28,8 @@
 
 namespace Greenter\Sunat\GRE\Api;
 
+use Greenter\Sunat\GRE\Model\CpeResponse;
+use Greenter\Sunat\GRE\Model\StatusResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -48,7 +50,7 @@ use Greenter\Sunat\GRE\ObjectSerializer;
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class CpeApi
+class CpeApi implements CpeApiInterface
 {
     /**
      * @var ClientInterface
@@ -131,16 +133,15 @@ class CpeApi
      *
      * Permite realizar la consulta del envío realizado
      *
-     * @param  string $num_ticket Número de ticket (UUID) generado por el envío realizado (required)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['consultarEnvio'] to see the possible values for this operation
+     * @param  string $ticket Número de ticket (UUID) generado por el envío realizado (required)
      *
      * @throws \Greenter\Sunat\GRE\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Greenter\Sunat\GRE\Model\StatusResponse|\Greenter\Sunat\GRE\Model\CpeError|\Greenter\Sunat\GRE\Model\CpeErrorValidation
+     * @return StatusResponse
      */
-    public function consultarEnvio($num_ticket, string $contentType = self::contentTypes['consultarEnvio'][0])
+    public function consultarEnvio(string $ticket): StatusResponse
     {
-        list($response) = $this->consultarEnvioWithHttpInfo($num_ticket, $contentType);
+        list($response) = $this->consultarEnvioWithHttpInfo($ticket, self::contentTypes['consultarEnvio'][0]);
         return $response;
     }
 
@@ -424,15 +425,14 @@ class CpeApi
      *
      * @param  string $filename Nombre del archivo sin extension (required)
      * @param  \Greenter\Sunat\GRE\Model\CpeDocument $cpe_document cpe_document (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['enviarCpe'] to see the possible values for this operation
      *
      * @throws \Greenter\Sunat\GRE\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Greenter\Sunat\GRE\Model\CpeResponse
+     * @return CpeResponse
      */
-    public function enviarCpe($filename, $cpe_document = null, string $contentType = self::contentTypes['enviarCpe'][0])
+    public function enviarCpe($filename, $cpe_document = null): CpeResponse
     {
-        list($response) = $this->enviarCpeWithHttpInfo($filename, $cpe_document, $contentType);
+        list($response) = $this->enviarCpeWithHttpInfo($filename, $cpe_document, self::contentTypes['enviarCpe'][0]);
         return $response;
     }
 
