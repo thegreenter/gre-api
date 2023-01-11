@@ -107,7 +107,7 @@ paths:
       security:
       - sunat_auth: []
   '/contribuyente/gem/comprobantes/envios/{numTicket}':
-    post:
+    get:
       tags:
       - "cpe"
       summary: "Permite realizar la consulta del envío realizado"
@@ -139,6 +139,8 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/CpeErrorValidation"
+      security:
+      - sunat_auth: []
 externalDocs:
   description: "MANUAL DE SERVICIO WEB - PLATAFORMA NUEVA GRE"
   url: "https://cpe.sunat.gob.pe/sites/default/files/inline-files/Manual_Servicios_GRE.pdf"
