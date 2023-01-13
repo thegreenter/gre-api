@@ -1,7 +1,7 @@
 openapi: 3.0.0
 servers:
   - url: 'https://api-seguridad.sunat.gob.pe/v1'
-  - url: 'https://api.sunat.gob.pe/v1'
+  - url: 'https://api-cpe.sunat.gob.pe/v1'
 info:
   description: "PLATAFORMA NUEVA GRE."
   version: "1.0.0"
