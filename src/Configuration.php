@@ -474,11 +474,11 @@ class Configuration
         return [
             [
                 "url" => "https://api-seguridad.sunat.gob.pe/v1",
-                "description" => "No description provided",
+                "description" => "Url para obtener el token de autenticacion",
             ],
             [
-                "url" => "https://api.sunat.gob.pe/v1",
-                "description" => "No description provided",
+                "url" => "https://api-cpe.sunat.gob.pe/v1",
+                "description" => "Url para enviar comprobantes y consultar su estado",
             ]
         ];
     }
