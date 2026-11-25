@@ -249,7 +249,7 @@ class CpeError implements ModelInterface, ArrayAccess, \JsonSerializable
      * @param mixed[] $data Associated array of property values
      *                      initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setIfExists('cod', $data ?? [], null);
         $this->setIfExists('msg', $data ?? [], null);
